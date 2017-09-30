@@ -18,7 +18,7 @@ std::vector<point> vect,vect1;
 
 Planning::Planning(vector<pos> &v,int n){
   init(v,n);
-  CreateCircle();
+  //CreateCircle();
 }
 
 
@@ -50,9 +50,9 @@ void Planning::init(vector<pos> &v,int n)
     yc[i] = v[i+1].y;
   }
 
-  for(int i = 0; i < numObstacles; ++i){
-    printf("Circle %d : [x,y]--[%5.2lf, %5.2lf] radius--[%5.2lf]\n", i+1, xc[i], yc[i],30.0);
-  }
+  // for(int i = 0; i < numObstacles; ++i){
+  //   printf("Circle %d : [x,y]--[%5.2lf, %5.2lf] radius--[%5.2lf]\n", i+1, xc[i], yc[i],30.0);
+  // }
 
   printf("\nStart [%5.2lf, %5.2lf]\n", xStart, yStart);
   printf("End [%5.2lf, %5.2lf]\n\n", xGoal, yGoal);

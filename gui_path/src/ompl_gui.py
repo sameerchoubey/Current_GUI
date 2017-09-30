@@ -31,11 +31,11 @@ def Callback(msg):
     global points_home
     points_home=[]
     for i in msg.homePos:
-        points_home.append((int(i.x)/10+300, int(i.y)/10+200))
+        points_home.append([(int((i.x)+3300)*3.0/32), int((i.y+2200)/10.0)])
     global points_opp    
     points_opp=[]
     for i in msg.awayPos:
-        points_opp.append((int(i.x)/10+300, int(i.y)/10+200))
+        points_opp.append([(int((i.x)+3300)*3.0/32), int((i.y+2200)/10.0)])
 
 
 class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
@@ -80,7 +80,7 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         msg.step_size=stepSize
         msg.bias_param=biasParam
         msg.max_iteration=maxIterations
-        pub.publish(msg)
+        # pub.publish(msg)
         pass        
 
     def updateImage(self):
@@ -91,15 +91,12 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         # print(" in paint event")
         qp=QtGui.QPainter()
         qp.begin(self)
-        if self.image:
-            qp.drawImage(QtCore.QPoint(0,0),self.image)
         qp.end()  
 
     def display_bots(self, points_home, points_opp):
-        global img, vrtx
+        global vrtx
         self.scene.clear()
         self.graphicsView.setScene(self.scene)
-        img = np.zeros((400,600,3), np.uint8)
         brush= QtGui.QBrush(QtCore.Qt.SolidPattern)
         for point in points_home:
             self.scene.addEllipse(point[0], point[1],self.obstacleRadius,self.obstacleRadius , self.mark_e, brush)
@@ -118,19 +115,34 @@ class MainWindow(QtGui.QMainWindow, Ui_MainWindow, QtGui.QWidget):
         #     path_points.append((int(float(content[0])/800.0*600), int(float(content[1])/500.0*400)))
 
         # vrtx = path_points
-        print("no of points = ", len(vrtx))    
+        print("no of points = ", len(vrtx))  
+          
         path.moveTo(vrtx[0][0],vrtx[0][1])
-        for i in vrtx[1:]:
+        max_x=0
+        max_y=0
+        min_x=999
+        min_y=999
+        for i in vrtx[1::5]:
             path.lineTo(i[0],i[1])
+            if(i[0]>max_x):
+                max_x=i[0]
+            if(i[0]<min_x):
+                min_x=i[0]
+
+            if(i[1]>max_y):
+                max_y=i[1] 
+            if(i[1]<min_y):
+                min_y=i[1]       
         
         self.scene.addPath(path)
+        print(" Path added to scene now ",max_x, max_y," min = ",min_x, min_y)
 
 app=QtGui.QApplication(sys.argv)
 w=MainWindow()
 def main():
     rospy.init_node('display', anonymous=True)
     rospy.Subscriber("/belief_state", BeliefState , Callback);
-    rospy.Subscriber("/path_planner", planner_path, debug_path)
+    rospy.Subscriber("/path_planner_ompl", planner_path, debug_path)
 
     w.show()
     app.exec_()
