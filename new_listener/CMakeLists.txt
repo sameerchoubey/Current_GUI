@@ -64,7 +64,7 @@ add_executable(listener src/listener.cpp src/MotionPlanner.cpp)
 #add_executable(listener src/MotionPlanner.cpp)
 
 target_link_libraries(listener ${catkin_LIBRARIES} ${OMPL_LIBRARIES} ${OpenCV_LIBRARIES})
-add_dependencies(listener listener_generate_messages_cpp)
+add_dependencies(ompl_planner listener_generate_messages_cpp)
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
