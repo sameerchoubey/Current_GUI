@@ -9,7 +9,7 @@ project(gui_path)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
  krssg_ssl_msgs
- message_generation roscpp rospy std_msgs
+ message_generation roscpp rospy std_msgs)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
